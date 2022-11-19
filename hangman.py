@@ -230,14 +230,13 @@ def mistakes_cloud_shape(height: int, seed: int) -> list[list[str]]:
         for x in range(-width // 2 + 1, width // 2 + 1):
             row.append(bell(x, mean, stddev) * rand.uniform(1-noise, 1+noise))
     grid = [[None for _ in range(width)] for _ in range(height)] # the output grid of letter positions
-    letters = rand.sample(ascii_lowercase, len(ascii_lowercase))
-    while letters:
+    for letter in rand.sample(ascii_lowercase, len(ascii_lowercase)):
         # get the largest value from the distribution, place the letter there, then set adjacent probabilities in the distribution to zero
         flat_distribution = [p for row in distribution for p in row]
         flat_index = flat_distribution.index(max(flat_distribution))
         expected_row = flat_index // width
         expected_col = flat_index % width
-        grid[expected_row][expected_col] = letters.pop()
+        grid[expected_row][expected_col] = letter
         distribution[expected_row][expected_col] = 0 # stop future letters being placed here
         if expected_row > 0: # no vertical adjacency
             distribution[expected_row - 1][expected_col] = 0
