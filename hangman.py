@@ -234,8 +234,7 @@ def mistakes_cloud_shape(height: int, seed: int) -> list[list[str]]:
         # get the largest value from the distribution, place the letter there, then set adjacent probabilities in the distribution to zero
         flat_distribution = [p for row in distribution for p in row]
         flat_index = flat_distribution.index(max(flat_distribution))
-        expected_row = flat_index // width
-        expected_col = flat_index % width
+        expected_row, expected_col = divmod(flat_index, width)
         grid[expected_row][expected_col] = letter
         distribution[expected_row][expected_col] = 0 # stop future letters being placed here
         if expected_row > 0: # no vertical adjacency
