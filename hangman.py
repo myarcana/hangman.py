@@ -168,7 +168,7 @@ def calc_stddev(row_number, height, widest_value, narrowest_value, rate_of_narro
     right_bound = height - 1
     a_x, a_y = (0, widest_value)
     def straight_line_between(x0, y0, x1, y1):
-        return lambda x: (y1 - y0) / (x1 - x0) * (x - x0) + y0
+        return lambda x: y0 + (x - x0) * (y1 - y0) / (x1 - x0)
     control_point_x = right_bound/2 - rate_of_narrowing * right_bound / 2
     control_point_y = straight_line_between(0, narrowest_value, right_bound, widest_value)(control_point_x)
     b_x, b_y = (control_point_x, control_point_y)
@@ -192,9 +192,9 @@ def calc_mean(row_number, height, max_offset, funnel_factor, wavelength, seed):
     rand = random.Random()
     rand.seed(seed)
     funneling_factor = math.exp(math.log(funnel_factor)/height * row_number)
-    translated_x = row_number + rand.randint(0, wavelength) # the offset should start according to RNG
-    scaled_x = math.pi * 2 / wavelength * translated_x # scale to satisfy wavelength
-    return max_offset * funneling_factor * math.sin(scaled_x)
+    translated_row_number = row_number + rand.randint(0, wavelength) # the offset should start according to RNG
+    transformed_row_number = 2 * math.pi / wavelength * translated_row_number # scale to satisfy wavelength
+    return max_offset * funneling_factor * math.sin(transformed_row_number)
 
 
 @functools.cache
